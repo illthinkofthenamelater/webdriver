@@ -2,3 +2,4 @@ node_modules/
 allure-results/
 results/
 .env
+node_modules

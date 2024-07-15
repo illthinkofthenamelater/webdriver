@@ -4,23 +4,23 @@ class LoginPage {
     get loginButton() { return $("//input[@id='login-button']"); }
     get errorMessage() { return $("//h3[@data-test='error']"); }
 
-    open() {
-        browser.url('https://www.saucedemo.com/');
+    async open() {
+        await browser.url('https://www.saucedemo.com/');
     }
 
-    login(username, password) {
-        this.username.setValue(username);
-        this.password.setValue(password);
-        this.loginButton.click();
+    async login(username, password) {
+        await this.username.setValue(username);
+        await this.password.setValue(password);
+        await this.loginButton.click();
     }
 
-    clearInputs() {
-        this.username.clearValue();
-        this.password.clearValue();
+    async clearInputs() {
+        await this.username.clearValue();
+        await this.password.clearValue();
     }
 
-    getErrorMessage() {
-        return this.errorMessage.getText();
+    async getErrorMessage() {
+        return await this.errorMessage.getText();
     }
 }
 

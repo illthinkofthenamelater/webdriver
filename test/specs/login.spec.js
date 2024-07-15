@@ -1,26 +1,41 @@
 const LoginPage = require('../../pages/loginPage');
 
-describe('Login form tests', () => {
+describe('Login tests', () => {
 
-    const loginData = [
-        { username: '', password: '', error: 'Username is required' },
-        { username: 'standard_user', password: '', error: 'Password is required' },
-        { username: 'standard_user', password: 'secret_sauce', title: 'Swag Labs' }
-    ];
+    before(() => {
+    // Code that uses the browser object (e.g., navigating to the URL)
+    browser.url('https://www.saucedemo.com/');
+  });
 
-    loginData.forEach((data, index) => {
-        it(`should handle login case ${index + 1}`, () => {
-            LoginPage.open();
-            if (data.username) LoginPage.username.setValue(data.username);
-            if (data.password) LoginPage.password.setValue(data.password);
-            LoginPage.loginButton.click();
+  beforeEach(() => {
+    loginPage = new LoginPage(); // Create a new instance of LoginPage
+  });
 
-            if (data.error) {
-                expect(LoginPage.getErrorMessage()).toContain(data.error);
-            } else {
-                expect(browser.getTitle()).toBe(data.title);
-            }
-        });
+    const username = 'standard_user'; // Valid username
+    const password = 'secret_sauce';
+
+
+    it('UC-1: Empty Credentials', async () => {
+        await loginPage.clearInputs();
+        await loginPage.loginButton.click();
+        const errorMsg = await loginPage.getErrorMessage();
+        expect(errorMsg).toContain('Username is required');
     });
 
+    it('UC-2: Empty Password', async () => {
+        await loginPage.username.setValue(username);
+        await loginPage.password.clearValue();
+        await loginPage.loginButton.click();
+        const errorMsg = await loginPage.getErrorMessage();
+        expect(errorMsg).toContain('Password is required');
+    });
+
+    it('UC-3: Valid Credentials', async () => {
+        await loginPage.username.setValue(username);
+        await loginPage.password.setValue(password);
+        await loginPage.loginButton.click();
+        const title = await browser.getTitle();
+        expect(title).toEqual('Swag Labs');
+    });
 });
+
